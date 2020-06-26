@@ -1,8 +1,7 @@
 package com.iyengarcoders.groceries.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 // This table may chnage in future.
 @Entity
@@ -10,9 +9,9 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue
     @Column(name="id")
-    private Long id;
+    private UUID id;
 
     @Column(name="username")
     private String username;
@@ -28,23 +27,29 @@ public class User {
     private String emailAddress;
 
 
+    // TODO: maybe this is not needed here.
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Address> addresses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Order> orders = new HashSet<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
 
 
     public User() {
     }
 
-    public User(String username, Name name, String cellPhone, String homePhone, String emailAddress, Set<Address> addresses) {
+    public User(String username, Name name, String cellPhone, String homePhone, String emailAddress) {
         this.username = username;
         this.name = name;
         this.cellPhone = cellPhone;
         this.homePhone = homePhone;
         this.emailAddress = emailAddress;
-        this.addresses = addresses;
+//        this.addresses = addresses;
+    }
+
+
+    public UUID getId() {
+        return id;
     }
 
     public String getUsername() {

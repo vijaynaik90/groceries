@@ -5,6 +5,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.Objects;
+
 import static com.iyengarcoders.groceries.utils.Constants.AddressType;
 
 @Entity
@@ -142,5 +144,19 @@ public class Address {
 
     public void setLastUsed(Boolean lastUsed) {
         this.lastUsed = lastUsed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(id, address.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
     }
 }

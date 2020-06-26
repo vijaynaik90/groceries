@@ -27,6 +27,14 @@ public class CartItem {
 
     private double totalPrice;
 
+    public CartItem() {
+    }
+
+    public CartItem(Cart cart, Product product, int quantity) {
+        this.cart = cart;
+        this.product = product;
+        this.quantity = quantity;
+    }
 
     public UUID getId() {
         return id;

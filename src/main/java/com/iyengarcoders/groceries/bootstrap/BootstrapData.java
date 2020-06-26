@@ -1,9 +1,9 @@
 package com.iyengarcoders.groceries.bootstrap;
 
 import com.iyengarcoders.groceries.entity.*;
-import com.iyengarcoders.groceries.repositories.ProductCategoryRepository;
-import com.iyengarcoders.groceries.repositories.ProductRepository;
-import com.iyengarcoders.groceries.repositories.UserRepository;
+import com.iyengarcoders.groceries.repositories.*;
+import com.iyengarcoders.groceries.utils.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +18,9 @@ public class BootstrapData implements CommandLineRunner {
     private final ProductCategoryRepository productCategoryRepository;
 
     private final UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
 
     public BootstrapData(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository, UserRepository userRepository) {
@@ -50,13 +53,30 @@ public class BootstrapData implements CommandLineRunner {
 
 
         Name name = new Name("Vijay", "Simha    ", "Naik");
-        Address address1 = new Address(Address.AddressType.SHIPPING,"747 Golf View Road", null,"Mumbai", "MH", "India", "400071",false);
+        Address address1 = new Address(Constants.AddressType.SHIPPING,"747 Golf View Road", null,"Mumbai", "MH", "India", "400071",false);
 
-        User user1 = new User("vijaynaik90", name,"123234", null,"test@test.com",new HashSet<>());
+        User user1 = new User("vijaynaik90", name,"123234", null,"test@test.com");
         user1.addAddress(address1);
 
         userRepository.save(user1);
-        System.out.println("Bootstrap Data");
+        /* TODO: if we do below get this error:
+            org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist
+            Look into it.
+         */
+//        address1.setUser(user1);
+//        addressRepository.save(address1);
+
+        CartItem item = new CartItem();
+        item.setProduct(product1);
+        item.setQuantity(5);
+        item.setTotalPrice(item.getQuantity()*item.getProduct().getPrice());
+
+        Cart cart = new Cart();
+        cart.setCustomer(user1);
+        cart.addCartItem(item);
+
+        cartRepository.save(cart);
+        System.out.println("********* Bootstrap Data *********");
 
         System.out.println("Product Count:" + productRepository.count());
 
