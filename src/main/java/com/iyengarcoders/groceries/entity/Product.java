@@ -1,26 +1,38 @@
 package com.iyengarcoders.groceries.entity;
 
+import com.iyengarcoders.groceries.utils.Constants;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "product")
 public class Product {
 
     @Id
-    @GeneratedValue
-    @Column(name="id")
-    private UUID id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
+    private String id;
     @Column(name="sku")
     private String sku;
     @Column(name="name")
     private String name;
     @Column(name="price")
     private Double price;
-    @Column(name="weight")
-    private Double weight;
+    // 10Rs/ kg
+    // 5 Rs/ 250g
+    // 10 Rs/ litre
+    // 100Rs / bag
+
+    @Column(name="unit")
+    private Double unit;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "unitOfMeasure")
+    private Constants.UnitOfMeasure unitOfMeasure;
+
     @Column(name="description")
     private String description;
     @Column(name="created_at")
@@ -28,8 +40,8 @@ public class Product {
     @Column(name="stock")
     private Integer stock;
 
-    @Lob
-    private Byte[] image;
+    @OneToMany(mappedBy = "product")
+    private List<Files> images = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -38,17 +50,18 @@ public class Product {
     public Product() {
     }
 
-    public Product (String sku, String name, String description, Double price, Double weight, Date createdAt, Integer stock) {
+    public Product (String sku, String name, String description, Double price, Double unit, Constants.UnitOfMeasure unitOfMeasure, Date createdAt, Integer stock) {
         this.sku = sku;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.weight = weight;
+        this.unit = unit;
+        this.unitOfMeasure = unitOfMeasure;
         this.createdAt = createdAt;
         this.stock = stock;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -68,20 +81,20 @@ public class Product {
         this.name = name;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public double getWeight() {
-        return weight;
+    public Double getUnit() {
+        return unit;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setUnit(Double unit) {
+        this.unit = unit;
     }
 
     public String getDescription() {
@@ -96,20 +109,16 @@ public class Product {
         return createdAt;
     }
 
-    public void setCreatedAr(Date createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public int getStock() {
+    public Integer getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
+    public void setStock(Integer stock) {
         this.stock = stock;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public ProductCategory getProductCategory() {
@@ -118,6 +127,32 @@ public class Product {
 
     public void setProductCategory(ProductCategory productCategory) {
         this.productCategory = productCategory;
+    }
+
+    public List<Files> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Files> images) {
+        this.images = images;
+    }
+
+    public void addImage(Files file) {
+        images.add(file);
+        file.setProduct(this);
+    }
+
+    public void removeImage(Files file) {
+        images.remove(file);
+        file.setProduct(null);
+    }
+
+    public Constants.UnitOfMeasure getUnitOfMeasure() {
+        return unitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(Constants.UnitOfMeasure unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.iyengarcoders.groceries.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,11 +11,12 @@ import java.util.Set;
 public class ProductCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
-    private int id;
-    @Column(name="category_name")
-    private String categoryName;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
+    private String id;
+    @Column(name = "name")
+    private String name;
     @Column(name="description")
     private String description;
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -22,21 +25,21 @@ public class ProductCategory {
     public ProductCategory() {
     }
 
-    public ProductCategory(String categoryName, String description) {
-        this.categoryName = categoryName;
+    public ProductCategory(String name, String description) {
+        this.name = name;
         this.description = description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
