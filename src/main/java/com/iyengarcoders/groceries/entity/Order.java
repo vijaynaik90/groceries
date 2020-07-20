@@ -1,12 +1,11 @@
 package com.iyengarcoders.groceries.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static com.iyengarcoders.groceries.utils.Constants.OrderStatus;
 
@@ -16,11 +15,11 @@ public class Order {
 
     // how will you handle the case where user is a guest?
 
-
     @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private UUID id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
+    private String id;
 
     @Column(name = "order_date", nullable = false)
     private Date orderDate;
@@ -36,7 +35,8 @@ public class Order {
     private String customerName;
 
     // billing address will be customers.
-    private Address shippingAddress;
+    @Embedded
+    private Address billingAddress;
 
     @Column(name = "customer_email", nullable = false)
     private String customerEmail;
@@ -60,7 +60,7 @@ public class Order {
     @OneToMany(mappedBy = "pk.order")
     private List<OrderDetails> orderDetails = new ArrayList<>();
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -144,14 +144,6 @@ public class Order {
 
     public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
-    }
-
-    public Address getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(Address shippingAddress) {
-        this.shippingAddress = shippingAddress;
     }
 
     public String getComments() {

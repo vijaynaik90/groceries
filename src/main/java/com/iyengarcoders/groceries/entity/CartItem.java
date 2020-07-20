@@ -1,18 +1,19 @@
 package com.iyengarcoders.groceries.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "cart_item")
 public class CartItem {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private UUID id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name="cart_id")
@@ -23,12 +24,20 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int quantity;
+    private Double quantity;
 
-    private double totalPrice;
+    private Double totalPrice;
 
+    public CartItem() {
+    }
 
-    public UUID getId() {
+    public CartItem(Cart cart, Product product, Double quantity) {
+        this.cart = cart;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    public String getId() {
         return id;
     }
 
@@ -48,19 +57,19 @@ public class CartItem {
         this.product = product;
     }
 
-    public int getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
-    public double getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
 }

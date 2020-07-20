@@ -5,21 +5,22 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.Objects;
+
 import static com.iyengarcoders.groceries.utils.Constants.AddressType;
 
-@Entity
-@Table(name = "address")
+@Embeddable
 public class Address {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="id")
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy=GenerationType.AUTO)
+//    @Column(name="id")
+//    private Long id;
 
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "address_type")
-    private AddressType addressType = AddressType.DEFAULT;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "address_type")
+//    private AddressType addressType = AddressType.DEFAULT;
 
     @NotNull
     @Size(min = 5, max = 100)
@@ -32,14 +33,17 @@ public class Address {
 
     @NotNull
     @Size(max = 50)
+    @Column(name = "city")
     private String city;
 
     @NotNull
     @Size(max = 50)
+    @Column(name = "state")
     private String state;
 
     @NotNull
     @Size(max = 50)
+    @Column(name = "country")
     private String country;
 
     @NotNull
@@ -47,9 +51,9 @@ public class Address {
     @Column(name = "zip_code")
     private String zipCode;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 
     @Column(name = "last_used")
     private Boolean lastUsed = false;
@@ -57,8 +61,8 @@ public class Address {
     public Address() {
     }
 
-    public Address(AddressType addressType, @NotNull @Size(min = 5, max = 100) String line1, @Size(min = 5, max = 100) String line2, @NotNull @Size(max = 100) String city, @NotNull @Size(max = 100) String state, @NotNull @Size(max = 100) String country, @NotNull @Size(max = 6) String zipCode, Boolean lastUsed) {
-        this.addressType = addressType;
+    public Address(@NotNull @Size(min = 5, max = 100) String line1, @Size(min = 5, max = 100) String line2, @NotNull @Size(max = 100) String city, @NotNull @Size(max = 100) String state, @NotNull @Size(max = 100) String country, @NotNull @Size(max = 6) String zipCode, Boolean lastUsed) {
+//        this.addressType = addressType;
         this.line1 = line1;
         this.line2 = line2;
         this.city = city;
@@ -68,9 +72,9 @@ public class Address {
         this.lastUsed = lastUsed;
     }
 
-    public Long getId() {
-        return id;
-    }
+//    public Long getId() {
+//        return id;
+//    }
 
     public String getLine1() {
         return line1;
@@ -120,21 +124,21 @@ public class Address {
         this.zipCode = zipCode;
     }
 
-    public AddressType getAddressType() {
-        return addressType;
-    }
+//    public AddressType getAddressType() {
+//        return addressType;
+//    }
+//
+//    public void setAddressType(AddressType addressType) {
+//        this.addressType = addressType;
+//    }
 
-    public void setAddressType(AddressType addressType) {
-        this.addressType = addressType;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public Boolean getLastUsed() {
         return lastUsed;

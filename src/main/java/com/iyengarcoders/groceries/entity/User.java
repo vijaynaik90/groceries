@@ -1,8 +1,9 @@
 package com.iyengarcoders.groceries.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 // This table may chnage in future.
 @Entity
@@ -10,9 +11,10 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name="id")
-    private Long id;
+    private String id;
 
     @Column(name="username")
     private String username;
@@ -28,23 +30,31 @@ public class User {
     private String emailAddress;
 
 
+    // TODO: maybe this is not needed here.
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Address> addresses = new HashSet<>();
+    private List<ShippingAddress> shippingAddresses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Order> orders = new HashSet<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
 
+    @OneToOne(mappedBy = "customer")
+    private Cart cart;
 
     public User() {
     }
 
-    public User(String username, Name name, String cellPhone, String homePhone, String emailAddress, Set<Address> addresses) {
+    public User(String username, Name name, String cellPhone, String homePhone, String emailAddress) {
         this.username = username;
         this.name = name;
         this.cellPhone = cellPhone;
         this.homePhone = homePhone;
         this.emailAddress = emailAddress;
-        this.addresses = addresses;
+//        this.addresses = addresses;
+    }
+
+
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -95,21 +105,45 @@ public class User {
         this.emailAddress = emailAddress;
     }
 
-    public Set<Address> getAddresses() {
-        return addresses;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
-    public void addAddress(Address address) {
-        addresses.add(address);
+    public Name getName() {
+        return name;
+    }
+
+    public void setName(Name name) {
+        this.name = name;
+    }
+
+    public List<ShippingAddress> getShippingAddresses() {
+        return shippingAddresses;
+    }
+
+    public void setShippingAddresses(List<ShippingAddress> shippingAddresses) {
+        this.shippingAddresses = shippingAddresses;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public void addAddress(ShippingAddress address) {
+        shippingAddresses.add(address);
         address.setUser(this);
     }
 
-    public void removeAddress(Address address) {
-        addresses.remove(address);
+    public void removeAddress(ShippingAddress address) {
+        shippingAddresses.remove(address);
         address.setUser(null);
     }
 }
