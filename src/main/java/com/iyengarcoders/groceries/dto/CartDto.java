@@ -12,7 +12,7 @@ public class CartDto {
     private Date createdAt;
 
     @JsonProperty("customer")
-    private UserDto userDto;
+    private UserProfileDto userProfileDto;
 
     @JsonProperty("cartItems")
     private List<CartItemDto> cartItemsDto;
@@ -36,12 +36,12 @@ public class CartDto {
         this.createdAt = createdAt;
     }
 
-    public UserDto getUserDto() {
-        return userDto;
+    public UserProfileDto getUserProfileDto() {
+        return userProfileDto;
     }
 
-    public void setUserDto(UserDto userDto) {
-        this.userDto = userDto;
+    public void setUserProfileDto(UserProfileDto userProfileDto) {
+        this.userProfileDto = userProfileDto;
     }
 
     public List<CartItemDto> getCartItemsDto() {

@@ -13,7 +13,7 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring", uses = {ProductMapper.class})
 public interface CartItemMapper {
 
-    @Mappings( {
+    @Mappings({
             @Mapping(target = "itemId", source = "cartItem.id"),
             @Mapping(target = "productDto", source = "cartItem.product")
 

@@ -53,7 +53,7 @@ public class Address {
 
 //    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+//    private UserProfile user;
 
     @Column(name = "last_used")
     private Boolean lastUsed = false;
@@ -132,11 +132,11 @@ public class Address {
 //        this.addressType = addressType;
 //    }
 
-//    public User getUser() {
+//    public UserProfile getUserProfile() {
 //        return user;
 //    }
 //
-//    public void setUser(User user) {
+//    public void setUserProfile(UserProfile user) {
 //        this.user = user;
 //    }
 

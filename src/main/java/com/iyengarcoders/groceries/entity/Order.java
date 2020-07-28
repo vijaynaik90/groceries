@@ -55,7 +55,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
+    private UserProfile customer;
 
     @OneToMany(mappedBy = "pk.order")
     private List<OrderDetails> orderDetails = new ArrayList<>();
@@ -98,11 +98,11 @@ public class Order {
         this.customerPhone = customerPhone;
     }
 
-    public User getCustomer() {
+    public UserProfile getCustomer() {
         return customer;
     }
 
-    public void setCustomer(User customer) {
+    public void setCustomer(UserProfile customer) {
         this.customer = customer;
     }
 

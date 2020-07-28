@@ -24,7 +24,7 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "customer_id")
     @JsonIgnore
-    private User customer;
+    private UserProfile customer;
 
     public Cart() {
     }
@@ -32,7 +32,7 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade= CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    public Cart(User customer) {
+    public Cart(UserProfile customer) {
         this.customer = customer;
     }
 
@@ -44,11 +44,11 @@ public class Cart {
         this.id = id;
     }
 
-    public User getCustomer() {
+    public UserProfile getCustomer() {
         return customer;
     }
 
-    public void setCustomer(User customer) {
+    public void setCustomer(UserProfile customer) {
         this.customer = customer;
     }
 

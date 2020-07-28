@@ -3,7 +3,7 @@ package com.iyengarcoders.groceries.services;
 import com.iyengarcoders.groceries.dto.CartDto;
 import com.iyengarcoders.groceries.entity.Cart;
 import com.iyengarcoders.groceries.entity.CartItem;
-import com.iyengarcoders.groceries.entity.User;
+import com.iyengarcoders.groceries.entity.UserProfile;
 import com.iyengarcoders.groceries.mappers.CartMapper;
 import com.iyengarcoders.groceries.repositories.CartRepository;
 import com.iyengarcoders.groceries.repositories.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartService {
@@ -34,11 +33,11 @@ public class CartService {
 
     public CartDto getCartForUser(String userId) {
 //        UUID userUuid = UUID.fromString(userId);
-        Optional<User> optionalCustomer = userRepository.findById(userId);
+        Optional<UserProfile> optionalCustomer = userRepository.findById(userId);
         if(!optionalCustomer.isPresent()) {
             // throw some error
         }
-        User customer = optionalCustomer.get();
+        UserProfile customer = optionalCustomer.get();
         Cart cart = cartRepository.findByCustomer(customer).get();
         return cartMapper.toCartDto(cart, customer);
 
@@ -46,8 +45,8 @@ public class CartService {
     // to be called once user logs in/registers and cart is not yet created
     public CartDto initCart(String userId) {
 //        UUID userUuid = UUID.fromString(userId);
-        Optional<User> optionalCustomer = userRepository.findById(userId);
-        User customer = optionalCustomer.get();
+        Optional<UserProfile> optionalCustomer = userRepository.findById(userId);
+        UserProfile customer = optionalCustomer.get();
         if(!optionalCustomer.isPresent()) {
             // throw some error
         }

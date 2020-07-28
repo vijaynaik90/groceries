@@ -7,16 +7,17 @@ import java.util.*;
 
 // This table may chnage in future.
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "user_profile")
+public class UserProfile {
+
+//    @Id
+//    @GeneratedValue(generator = "uuid")
+//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+//    @Column(name="id")
+//    private String id;
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name="id")
-    private String id;
-
-    @Column(name="username")
+    @Column(name = "username")
     private String username;
 
     @Embedded
@@ -31,7 +32,7 @@ public class User {
 
 
     // TODO: maybe this is not needed here.
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ShippingAddress> shippingAddresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -40,21 +41,15 @@ public class User {
     @OneToOne(mappedBy = "customer")
     private Cart cart;
 
-    public User() {
+    public UserProfile() {
     }
 
-    public User(String username, Name name, String cellPhone, String homePhone, String emailAddress) {
+    public UserProfile(String username, Name name, String cellPhone, String homePhone, String emailAddress) {
         this.username = username;
         this.name = name;
         this.cellPhone = cellPhone;
         this.homePhone = homePhone;
         this.emailAddress = emailAddress;
-//        this.addresses = addresses;
-    }
-
-
-    public String getId() {
-        return id;
     }
 
     public String getUsername() {
@@ -64,22 +59,6 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
-//    public String getFirstName() {
-//        return firstName;
-//    }
-//
-//    public void setFirstName(String firstName) {
-//        this.firstName = firstName;
-//    }
-//
-//    public String getLastName() {
-//        return lastName;
-//    }
-//
-//    public void setLastName(String lastName) {
-//        this.lastName = lastName;
-//    }
 
     public String getCellPhone() {
         return cellPhone;
@@ -139,11 +118,11 @@ public class User {
 
     public void addAddress(ShippingAddress address) {
         shippingAddresses.add(address);
-        address.setUser(this);
+        address.setUserProfile(this);
     }
 
     public void removeAddress(ShippingAddress address) {
         shippingAddresses.remove(address);
-        address.setUser(null);
+        address.setUserProfile(null);
     }
 }
