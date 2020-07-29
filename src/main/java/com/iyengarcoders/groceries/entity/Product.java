@@ -30,7 +30,7 @@ public class Product {
     private Double unit;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "unitOfMeasure")
+    @Column(name = "unit_of_measure")
     private Constants.UnitOfMeasure unitOfMeasure;
 
     @Column(name="description")

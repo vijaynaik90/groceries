@@ -103,22 +103,21 @@ create table shipping_address (
     primary key (id)
 );
 
-create table user (
-   id varchar(255) not null,
+create table user_profile (
     cell_phone varchar(255),
     email_address varchar(255),
     home_phone varchar(255),
-    first_name varchar(255),
-    last_name varchar(255),
+    first_name varchar(255) NOT NULL,
+    last_name varchar(255) NOT NULL,
     middle_name varchar(255),
-    username varchar(255),
-    primary key (id)
+    username varchar(255) NOT NULL,
+    FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
 alter table cart
    add constraint FK9mocisyryuqas1xrlbl8872lb
    foreign key (customer_id)
-   references user;
+   references users;
 
 
 alter table cart_item
@@ -149,7 +148,7 @@ alter table order_details
 alter table orders
    add constraint FK14n2jkmoyhpimhracvcdy7sst
    foreign key (customer_id)
-   references user;
+   references users;
 
 alter table product
    add constraint FK5cypb0k23bovo3rn1a5jqs6j4
@@ -159,4 +158,4 @@ alter table product
 alter table shipping_address
    add constraint FKqijab83dlbj00gytfswvh7ri9
    foreign key (user_id)
-   references user;
+   references users;
