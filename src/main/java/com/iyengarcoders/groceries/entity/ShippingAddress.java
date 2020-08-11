@@ -1,9 +1,11 @@
 package com.iyengarcoders.groceries.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "shipping_address")
@@ -11,8 +13,9 @@ public class ShippingAddress {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
-    private String id;
+    @Type(type = "uuid-char")
+    @Column(name="id", length = 36, nullable = false)
+    private UUID id;
 
     @Embedded
     private Address address;
@@ -25,7 +28,7 @@ public class ShippingAddress {
     }
 
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

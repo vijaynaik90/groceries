@@ -2,11 +2,13 @@ package com.iyengarcoders.groceries.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "cart")
@@ -15,8 +17,9 @@ public class Cart {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
-    private String id;
+    @Type(type = "uuid-char")
+    @Column(name="id", length = 36, nullable = false)
+    private UUID id;
 
     @Column(name="created_at")
     private Date createdAt;
@@ -29,18 +32,18 @@ public class Cart {
     public Cart() {
     }
 
-    @OneToMany(mappedBy = "cart", cascade= CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private List<CartItem> cartItems = new ArrayList<>();
 
     public Cart(UserProfile customer) {
         this.customer = customer;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

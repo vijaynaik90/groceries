@@ -1,11 +1,16 @@
 package com.iyengarcoders.groceries.controllers;
 
 import com.iyengarcoders.groceries.dto.PingDto;
+import com.iyengarcoders.groceries.dto.UserProfileDto;
 import com.iyengarcoders.groceries.repositories.UserRepository;
+import com.iyengarcoders.groceries.security.GroceryUser;
+import com.iyengarcoders.groceries.security.GroceryUserDetailsService;
 import com.iyengarcoders.groceries.security.JwtTokenProvider;
+import com.iyengarcoders.groceries.security.payload.ApiResponse;
 import com.iyengarcoders.groceries.security.payload.JwtAuthenticationResponse;
 import com.iyengarcoders.groceries.security.payload.LoginRequest;
 import com.iyengarcoders.groceries.security.payload.SignUpRequest;
+import com.iyengarcoders.groceries.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +40,11 @@ public class CommonController {
     @Autowired
     UserRepository userRepository;
 
-//    @Autowired
-//    RoleRepository roleRepository;
+    @Autowired
+    private GroceryUserDetailsService userDetailsService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
@@ -54,7 +59,14 @@ public class CommonController {
 
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
-        return null;
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(),loginRequest.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        GroceryUser userPrincipal = (GroceryUser) authentication.getPrincipal();
+        String username = userPrincipal.getUsername();
+        String jwt = jwtTokenProvider.generateToken(username);
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,username));
     }
 
     @PostMapping("/signup")
@@ -62,6 +74,19 @@ public class CommonController {
         // Following conditions have to be checked.
         // 1) Username already exists.
         // 2)Email Address in use
-        return null;
+        if(userDetailsService.loadUsersByUsername(signUpRequest.getUsername()).size() > 0) {
+            return new ResponseEntity(new ApiResponse(false, "Username already exists"),HttpStatus.BAD_REQUEST);
+        }
+        UserProfileDto newUser = userService.createNewUser(signUpRequest,false);
+
+        System.out.println("Created USer:" + newUser.toString());
+
+        String jwt = jwtTokenProvider.generateToken(newUser.getUsername());
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/api/users/{username}")
+                .buildAndExpand(newUser.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body(new JwtAuthenticationResponse(jwt,newUser.getUsername()));
     }
 }

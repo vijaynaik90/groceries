@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface ShippingAddressRepository extends JpaRepository<ShippingAddress, String> {
+public interface ShippingAddressRepository extends JpaRepository<ShippingAddress, UUID> {
 }

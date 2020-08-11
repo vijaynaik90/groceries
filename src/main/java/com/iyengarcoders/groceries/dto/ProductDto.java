@@ -3,11 +3,12 @@ package com.iyengarcoders.groceries.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class ProductDto {
 
 
-    private String productId;
+    private UUID productId;
 
     private String name;
 
@@ -31,11 +32,11 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public String getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

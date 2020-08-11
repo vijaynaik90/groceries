@@ -2,9 +2,11 @@ package com.iyengarcoders.groceries.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.UUID;
+
 public class CartItemDto {
 
-    private String itemId;
+    private UUID itemId;
 
     @JsonProperty("product")
     private ProductDto productDto;
@@ -16,11 +18,11 @@ public class CartItemDto {
     public CartItemDto() {
     }
 
-    public String getItemId() {
+    public UUID getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(UUID itemId) {
         this.itemId = itemId;
     }
 

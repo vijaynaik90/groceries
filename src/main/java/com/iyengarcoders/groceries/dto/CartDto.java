@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class CartDto {
 
-    private String cartId;
+    private UUID cartId;
 
     private Date createdAt;
 
@@ -20,11 +21,11 @@ public class CartDto {
     public CartDto() {
     }
 
-    public String getCartId() {
+    public UUID getCartId() {
         return cartId;
     }
 
-    public void setCartId(String cartId) {
+    public void setCartId(UUID cartId) {
         this.cartId = cartId;
     }
 

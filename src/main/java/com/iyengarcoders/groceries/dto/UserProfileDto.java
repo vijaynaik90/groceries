@@ -3,8 +3,6 @@ package com.iyengarcoders.groceries.dto;
 import java.util.List;
 
 public class UserProfileDto {
-
-    private String userId;
     private String username;
     private String firstName;
     private String middleName;
@@ -15,14 +13,6 @@ public class UserProfileDto {
     private List<ShippingAddressDto> shippingAddresses;
 
     public UserProfileDto() {
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getUsername() {

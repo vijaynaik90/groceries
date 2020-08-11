@@ -90,11 +90,14 @@ public class BootstrapData implements CommandLineRunner {
         AddressDto addressDto1 = new AddressDto("747 Golf View Road", "Flat No. 501","Mumbai", "MH", "India", "400071",false);
         AddressDto addressDto2 = new AddressDto("330 Jaksonvile Road", null,"Philadelphia", "PA", "USA", "18974",true);
 
-        SignUpRequest request = SignUpRequest.builder().firstName("Vijay").lastName("Naik")
+        SignUpRequest request1 = SignUpRequest.builder().username("vijaynaik90").firstName("Vijay").lastName("Naik")
                 .email("vijay@vijay.com").password("password").cellPhone("123234").shippingAddresses(Arrays.asList(addressDto1,addressDto2)).build();
 
+        SignUpRequest request2 = SignUpRequest.builder().username("ramyamandyam420").firstName("Ramya").lastName("Mandyam")
+                .email("ramya@ramya.com").password("password").cellPhone("678986").shippingAddresses(Arrays.asList(addressDto1)).build();
+
 //        Address address1 = new Address("747 Golf View Road", "Flat No. 501","Mumbai", "MH", "India", "400071",false);
-        Address address2 = new Address("330 Jaksonvile Road", null,"Philadelphia", "PA", "USA", "18974",true);
+//        Address address2 = new Address("330 Jaksonvile Road", null,"Philadelphia", "PA", "USA", "18974",true);
 
 //        ShippingAddress shippingAddress1 = new ShippingAddress();
 //        shippingAddress1.setAddress(address1);
@@ -102,21 +105,22 @@ public class BootstrapData implements CommandLineRunner {
 //        ShippingAddress shippingAddress2 = new ShippingAddress();
 //        shippingAddress2.setAddress(address2);
 //
-        ShippingAddress shippingAddress3 = new ShippingAddress();
-        shippingAddress3.setAddress(address2);
+//        ShippingAddress shippingAddress3 = new ShippingAddress();
+//        shippingAddress3.setAddress(address2);
 
 //        UserProfile userProfile1 = new UserProfile("vijaynaik90", name,"123234", null,"vijay@vijay.com");
-        Name name = new Name("Ramya", "Mandyam", "Anandi");
-        UserProfile userProfile2 = new UserProfile("ramyamandyam420", name,"678986", null,"ramya@ramya.com");
+//        Name name = new Name("Ramya", "Mandyam", "Anandi");
+//        UserProfile userProfile2 = new UserProfile("ramyamandyam420", name,"678986", null,"ramya@ramya.com");
 
 //        userProfile1.addAddress(shippingAddress1);
 //        userProfile1.addAddress(shippingAddress2);
 
-        userProfile2.addAddress(shippingAddress3);
+//        userProfile2.addAddress(shippingAddress3);
 
 //        userRepository.save(userProfile1);
-        userRepository.save(userProfile2);
-        UserProfileDto userProfileDto1 = userService.createNewUser(request,false);
+        UserProfileDto userProfileDto1 = userService.createNewUser(request1,true);
+        UserProfileDto userProfileDto2 = userService.createNewUser(request2,false);
+
         /* TODO: if we do below get this error:
             org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist
             Look into it.
@@ -136,7 +140,7 @@ public class BootstrapData implements CommandLineRunner {
         item2.setTotalPrice((item2.getQuantity()/item2.getProduct().getUnit())*item2.getProduct().getPrice());
 
         Cart cart = new Cart();
-        cart.setCustomer(userProfile2);
+        cart.setCustomer(userService.getUserProfileEntity(userProfileDto2.getUsername()));
         cart.addCartItem(item1);
         cart.addCartItem(item2);
 

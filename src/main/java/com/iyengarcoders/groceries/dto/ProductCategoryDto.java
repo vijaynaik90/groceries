@@ -1,8 +1,10 @@
 package com.iyengarcoders.groceries.dto;
 
+import java.util.UUID;
+
 public class ProductCategoryDto {
 
-    private String categoryId;
+    private UUID categoryId;
 
     private String categoryName;
 
@@ -11,11 +13,11 @@ public class ProductCategoryDto {
     public ProductCategoryDto() {
     }
 
-    public String getCategoryId() {
+    public UUID getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(UUID categoryId) {
         this.categoryId = categoryId;
     }
 

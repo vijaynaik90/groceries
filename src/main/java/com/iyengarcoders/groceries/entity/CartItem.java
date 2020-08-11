@@ -2,8 +2,10 @@ package com.iyengarcoders.groceries.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "cart_item")
@@ -12,8 +14,9 @@ public class CartItem {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
-    private String id;
+    @Type(type = "uuid-char")
+    @Column(name="id", length = 36, nullable = false)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name="cart_id")
@@ -26,6 +29,7 @@ public class CartItem {
 
     private Double quantity;
 
+    @Column(name = "total_price")
     private Double totalPrice;
 
     public CartItem() {
@@ -37,7 +41,7 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

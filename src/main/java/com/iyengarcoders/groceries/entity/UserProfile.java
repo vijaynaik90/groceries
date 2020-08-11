@@ -17,7 +17,7 @@ public class UserProfile {
 //    private String id;
 
     @Id
-    @Column(name = "username")
+    @Column(name = "username",length = 50, nullable = false)
     private String username;
 
     @Embedded

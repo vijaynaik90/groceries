@@ -1,18 +1,22 @@
 package com.iyengarcoders.groceries.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "files")
 public class Files {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Type(type = "uuid-char")
+    @Column(name="id", length = 36, nullable = false)
+    private UUID id;
 
     @Column(name="file_name")
     private String fileName;
@@ -42,7 +46,7 @@ public class Files {
         this.data = data;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

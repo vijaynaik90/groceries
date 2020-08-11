@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class GroceryUserDetailsService extends JdbcUserDetailsManager {
@@ -27,17 +29,32 @@ public class GroceryUserDetailsService extends JdbcUserDetailsManager {
     @Autowired
     private UserRepository userRepository;
     public static final String DEF_USERS_BY_USERNAME_QUERY =
-            "SELECT a.username, a.password, a.enabled, b.org_id, b.email " +
+            "SELECT a.username, a.password, a.enabled, b.email " +
                     "FROM users a INNER JOIN user_profile b ON (a.username = b.username)" +
                     "WHERE a.username = ? OR LOWER(b.email) = ?";
 
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String usernameOrEmail) {
-//        GroceryUser user = userRepository.loadUserByUsernameOrEmailAddress(usernameOrEmail);
-//        return user;
-        return null;
+    public List<UserDetails> loadUsersByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+/*
+GroceryUser user = userRepository.loadUserByUsernameOrEmailAddress(usernameOrEmail);
+return user;
+*/
+        return getJdbcTemplate().query(DEF_USERS_BY_USERNAME_QUERY, new String[] {usernameOrEmail, usernameOrEmail.toLowerCase()}, new RowMapper<UserDetails>() {
+            public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
+                String username = rs.getString(1);
+                String password = rs.getString(2);
+                boolean enabled = rs.getBoolean(3);
+                String email = rs.getString(4);
+                return new GroceryUser(username, password, email,enabled, true, true, true, AuthorityUtils.NO_AUTHORITIES);
+            }
+        });
+    }
+
+    @Override
+    public void changePassword(String a, String b) {
+
     }
 
     @Transactional

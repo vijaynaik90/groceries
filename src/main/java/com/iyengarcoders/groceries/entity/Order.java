@@ -1,11 +1,13 @@
 package com.iyengarcoders.groceries.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.iyengarcoders.groceries.utils.Constants.OrderStatus;
 
@@ -18,8 +20,9 @@ public class Order {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
-    private String id;
+    @Type(type = "uuid-char")
+    @Column(name="id", length = 36, nullable = false)
+    private UUID id;
 
     @Column(name = "order_date", nullable = false)
     private Date orderDate;
@@ -60,7 +63,7 @@ public class Order {
     @OneToMany(mappedBy = "pk.order")
     private List<OrderDetails> orderDetails = new ArrayList<>();
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

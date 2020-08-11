@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class FilesService {
@@ -22,7 +23,7 @@ public class FilesService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Files storeFile(MultipartFile file, String productId, boolean isDefault) {
+    public Files storeFile(MultipartFile file, UUID productId, boolean isDefault) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -46,7 +47,7 @@ public class FilesService {
         }
     }
 
-    public Files getFile(String fileId) {
+    public Files getFile(UUID fileId) {
         return fileRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("File not found with id " + fileId));
     }

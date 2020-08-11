@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -40,6 +41,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Collection<Constants.RoleName> roles = isAdmin ? Collections.singletonList(Constants.RoleName.ROLE_ADMIN) : Collections.singletonList(Constants.RoleName.ROLE_USER);
 
+        //TODO: check if username already exists.
         String username = groceryUserDetailsService.createUserInDB(request.getUsername(), request.getEmail(), new HashSet<>(roles), encodedPassword);
         if(username == null) {
             // could not create user
@@ -47,6 +49,7 @@ public class UserService {
 
         Name name = new Name(request.getFirstName(), request.getMiddleName() , request.getLastName());
         UserProfile userProfile = new UserProfile();
+        userProfile.setUsername(username);
         userProfile.setName(name);
         for(AddressDto addressDto: request.getShippingAddresses()) {
             Address address = new Address(addressDto.getLine1(),addressDto.getLine2(), addressDto.getCity(), addressDto.getState(), addressDto.getCountry(),addressDto.getZipCode(),addressDto.getLastUsed());
@@ -61,5 +64,13 @@ public class UserService {
         // user created in users so create in user_profile table now
         UserProfile savedUserProfile = userRepository.save(userProfile);
         return userProfileMapper.toUserDto(savedUserProfile);
+    }
+
+    public UserProfile getUserProfileEntity(String username) {
+        Optional<UserProfile> optionalUserProfile =  userRepository.findByUsername(username);
+        if(!optionalUserProfile.isPresent()) {
+            // throw error
+        }
+        return optionalUserProfile.get();
     }
 }

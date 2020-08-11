@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-public interface ProductRepository extends JpaRepository<Product, String> {
+public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p from Product p WHERE p.productCategory.id = :categoryId")
-    List<Product> findByCategoryId(@Param("categoryId") String categoryId);
+    List<Product> findByCategoryId(@Param("categoryId") UUID categoryId);
 }

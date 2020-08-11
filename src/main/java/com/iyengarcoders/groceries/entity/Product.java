@@ -2,6 +2,7 @@ package com.iyengarcoders.groceries.entity;
 
 import com.iyengarcoders.groceries.utils.Constants;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,8 +14,9 @@ public class Product {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name="id", columnDefinition = "CHAR", length = 36, nullable = false)
-    private String id;
+    @Type(type = "uuid-char")
+    @Column(name="id", length = 36, nullable = false)
+    private UUID id;
     @Column(name="sku")
     private String sku;
     @Column(name="name")
@@ -61,7 +63,7 @@ public class Product {
         this.stock = stock;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

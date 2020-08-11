@@ -1,7 +1,9 @@
 package com.iyengarcoders.groceries.dto;
 
+import java.util.UUID;
+
 public class ShippingAddressDto {
-    private String addressId;
+    private UUID addressId;
 
     private String line1;
 
@@ -20,11 +22,11 @@ public class ShippingAddressDto {
     public ShippingAddressDto() {
     }
 
-    public String getAddressId() {
+    public UUID getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(String addressId) {
+    public void setAddressId(UUID addressId) {
         this.addressId = addressId;
     }
 

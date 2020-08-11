@@ -24,9 +24,9 @@ public class ProductService {
 
     // get single product
     public ProductDto getProduct(String productId) {
-//        UUID productUuid = UUID.fromString(productId);
+        UUID productUuid = UUID.fromString(productId);
         return productRepository
-                .findById(productId)
+                .findById(productUuid)
                 .map(product -> {
                     // convert to productDto
                     return productMapper.productToProductDto(product);
@@ -49,7 +49,8 @@ public class ProductService {
 
 
     public List<ProductDto> getProductByCategory(String categoryId) {
-        List<Product> productList = productRepository.findByCategoryId(categoryId);
+        UUID categoryUuid = UUID.fromString(categoryId);
+        List<Product> productList = productRepository.findByCategoryId(categoryUuid);
         return productList
                 .stream()
                 .map(productMapper::productToProductDto)

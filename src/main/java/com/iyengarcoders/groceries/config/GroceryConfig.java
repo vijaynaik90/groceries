@@ -1,5 +1,6 @@
 package com.iyengarcoders.groceries.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -44,17 +46,17 @@ public class GroceryConfig implements WebMvcConfigurer {
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String hibernatehbm2ddl;
-
-    @Value("${spring.jpa.properties.hibernate.dialect}")
-    private String hibernateDialect;
-
-    @Value("${spring.jpa.properties.hibernate.show_sql}")
-    private Boolean showSql;
-
-    @Value("${spring.jpa.properties.hibernate.use_sql_comments}")
-    private Boolean useSqlComments;
-    @Value("${spring.jpa.properties.hibernate.format_sql}")
-    private Boolean formatSql;
+//
+//    @Value("${spring.jpa.properties.hibernate.dialect}")
+//    private String hibernateDialect;
+//
+//    @Value("${spring.jpa.properties.hibernate.show_sql}")
+//    private String showSql;
+//
+//    @Value("${spring.jpa.properties.hibernate.use_sql_comments}")
+//    private String useSqlComments;
+//    @Value("${spring.jpa.properties.hibernate.format_sql}")
+//    private String formatSql;
 
 //    @Value("${hibernate.search.default.indexBase}")
 //    private String hibernateIndexBase;
@@ -62,32 +64,45 @@ public class GroceryConfig implements WebMvcConfigurer {
     @Bean
     public DataSource dataSource(){
 
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
 
-        dataSource.setDriverClassName(env.getProperty("spring.datasource.driverClassName"));
-        dataSource.setUrl(env.getProperty("spring.datasource.url"));
-        dataSource.setUsername(env.getProperty("datasource.username"));
-        dataSource.setPassword(env.getProperty("datasource.password"));
+//        dataSource.setDriverClassName(env.getProperty("spring.datasource.driverClassName"));
+//        dataSource.setUrl(env.getProperty("spring.datasource.url"));
+//        dataSource.setUsername(env.getProperty("spring.datasource.username"));
+//        dataSource.setPassword(env.getProperty("spring.datasource.password"));
+
+        dataSource.setMaximumPoolSize(100);
+        dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/groceriesdb?createDatabaseIfNotExist=true&&useTimezone=true&serverTimezone=UTC");
+//        dataSource.addDataSourceProperty("url", env.getProperty("spring.datasource.jdbc-url"));
+        dataSource.addDataSourceProperty("user", env.getProperty("spring.datasource.username"));
+        dataSource.addDataSourceProperty("password", env.getProperty("spring.datasource.password"));
+        dataSource.addDataSourceProperty("cachePrepStmts", true);
+        dataSource.addDataSourceProperty("prepStmtCacheSize", 250);
+        dataSource.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
+        dataSource.addDataSourceProperty("useServerPrepStmts", true);
         return dataSource;
     }
 
     @Bean(name="entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(){
+    public EntityManagerFactory entityManagerFactory(){
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource());
         entityManager.setPackagesToScan("com.iyengarcoders.groceries.entity");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        entityManager.setPersistenceUnitName("default");
         entityManager.setJpaVendorAdapter(vendorAdapter);
         entityManager.setJpaProperties(additionalProperties());
+        entityManager.afterPropertiesSet();
 
-        return entityManager;
+        return entityManager.getObject();
     }
 
     @Bean
     public PlatformTransactionManager transactionManager(){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory());
 
         return transactionManager;
     }
@@ -101,11 +116,13 @@ public class GroceryConfig implements WebMvcConfigurer {
 
 
         Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         properties.setProperty("spring.jpa.hibernate.ddl-auto", hibernatehbm2ddl);
-        properties.setProperty("spring.jpa.properties.hibernate.dialect", hibernateDialect);
-        properties.setProperty("spring.jpa.properties.hibernate.show_sql", "true");
-        properties.setProperty("spring.jpa.properties.hibernate.use_sql_comments", "true");
-        properties.setProperty("spring.jpa.properties.hibernate.format_sql", "true");
+//        properties.setProperty("spring.jpa.properties.hibernate.dialect", hibernateDialect);
+//        properties.setProperty("spring.jpa.properties.hibernate.show_sql", "spring.jpa.properties.hibernate.show_sql");
+//        properties.setProperty("spring.jpa.properties.hibernate.use_sql_comments", "spring.jpa.properties.hibernate.use_sql_comments");
+//        properties.setProperty("spring.jpa.properties.hibernate.format_sql", "spring.jpa.properties.hibernate.format_sql");
 //        properties.setProperty("hibernate.search.default.indexBase", hibernateIndexBase);
 
         return properties;
